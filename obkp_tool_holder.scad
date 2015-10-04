@@ -14,6 +14,14 @@ num_drills = 3;
 inset_depth = 1.5;
 drill_depth = 4;
 
+wall_length = 19;
+
+module polyhole(h, d) {
+    n = max(round(2 * d),3);
+    rotate([0,0,180])
+        cylinder(h = h, r = (d / 2) / cos (180 / n), $fn = n);
+}
+
 module openbeam() {
     linear_extrude(rotate = 90, height = 100, center = true, convexity = 10) import (file = "openbeam.dxf");
 }
@@ -30,14 +38,17 @@ module plate() {
         // Interface plate (to extrusion)
         cube([plate_thickness, plate_length, plate_height]);
         
-        // Bottom plate
-        cube([plate_width, plate_length, plate_thickness]);
-        
+        // Bottom plate (where driver shafts exit))
+        #cube([plate_width, plate_length, plate_thickness]);
+          
+        // Top plate (driver landing area)
+        translate([19-wall_length, 0, plate_height-2]) #cube([plate_width, plate_length, plate_thickness]);  
+         
         // Top 'ceiling' wall  
-        translate([-17, 0, 10]) cube([18, plate_length, plate_height - 10]); 
+        translate([-(wall_length), 0, 10]) cube([wall_length, plate_length, plate_height - 10]); 
           
         // Bottom 'floor' wall
-        translate([-17, 0, 0]) cube([18, plate_length, plate_height - 10]);    
+        translate([-(wall_length), 0, 0]) cube([wall_length, plate_length, plate_height - 10]);    
       }
     
       // Mounting plate drills
@@ -45,12 +56,19 @@ module plate() {
       
       // Driver drills
       for ( i = [ 1 : num_drills ] ) {
-        translate([13, -2, 2]) translate([0, i*20, -3]) cylinder(r=4.5/2, h=9);
+        #translate([11, -2, 2]) translate([0, i*20, -3]) polyhole(9, 4.5);
+        #translate([13, -2, 16]) translate([0, i*20, -3]) polyhole(9, 4.5);
       }
       
-      #translate([-15, 0, 2]) cube([15, plate_length, 16]);
-      #translate([-18, 0, 4]) cube([4, plate_length, 12]);
+      // Snap
+      translate([-(wall_length - 2.5), 0, 2]) cube([(wall_length -2.5), plate_length, 16]);
+      
+      // Cutouts for extrusion
+      translate([-wall_length, 0, 2.5]) cube([4, plate_length, 15]);
     }
 }
-rotate([0, 0, 90]) translate([8, -35, -10]) plate();
-rotate([0, 90, 180]) translate([0, 0, 0]) openbeam();
+
+rotate([0, 90, 180]) {
+    rotate([0, 0, 90]) translate([8, -35, -10]) plate();
+    //rotate([0, 90, 180]) translate([0, 0, 0]) openbeam();
+}
