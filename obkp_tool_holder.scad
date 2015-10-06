@@ -2,8 +2,6 @@
 // Mount for the included wera drivers
 // License: CC1.0 Universal
 
-$fn=50;
-
 plate_length = 76;
 plate_height = 20;
 
@@ -39,10 +37,10 @@ module plate() {
         cube([plate_thickness, plate_length, plate_height]);
         
         // Bottom plate (where driver shafts exit))
-        #cube([plate_width, plate_length, plate_thickness]);
+        cube([plate_width, plate_length, plate_thickness]);
           
         // Top plate (driver landing area)
-        translate([19-wall_length, 0, plate_height-2]) #cube([plate_width, plate_length, plate_thickness]);  
+        translate([19-wall_length, 0, plate_height-2]) cube([plate_width, plate_length, plate_thickness]);  
          
         // Top 'ceiling' wall  
         translate([-(wall_length), 0, 10]) cube([wall_length, plate_length, plate_height - 10]); 
@@ -56,15 +54,15 @@ module plate() {
       
       // Driver drills
       for ( i = [ 1 : num_drills ] ) {
-        #translate([11, -2, 2]) translate([0, i*20, -3]) polyhole(9, 4.5);
-        #translate([13, -2, 16]) translate([0, i*20, -3]) polyhole(9, 4.5);
+        translate([11, -2, 2]) translate([0, i*20, -3]) polyhole(9, 4.5);
+        translate([13, -2, 16]) translate([0, i*20, -3]) polyhole(9, 4.5);
       }
       
-      // Snap
-      translate([-(wall_length - 2.5), 0, 2]) cube([(wall_length -2.5), plate_length, 16]);
+      // Beam connector
+      translate([-(wall_length-2.5), 0, 2]) cube([(wall_length-3), plate_length, 16]);
       
-      // Cutouts for extrusion
-      translate([-wall_length, 0, 2.5]) cube([4, plate_length, 15]);
+      // Cutout at snap area
+      #translate([-wall_length, 0, 2.5]) cube([2.5, plate_length, 15]);
     }
 }
 
