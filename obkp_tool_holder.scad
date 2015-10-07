@@ -62,7 +62,7 @@ module plate() {
       translate([-(wall_length-2.5), 0, 2]) cube([(wall_length-3), plate_length, 16]);
       
       // Cutout at snap area
-      #translate([-wall_length, 0, 2.5]) cube([2.5, plate_length, 15]);
+      #translate([-wall_length, 0, 3.5]) cube([2.5, plate_length, 13]);
     }
 }
 
