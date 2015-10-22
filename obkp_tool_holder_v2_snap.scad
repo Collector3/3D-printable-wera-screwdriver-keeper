@@ -14,6 +14,7 @@ drill_depth = 4;
 
 wall_length = 19;
 
+// Polyholes from: http://hydraraptor.blogspot.com/2011/02/polyholes.html
 module polyhole(h, d) {
     n = max(round(2 * d),3);
     rotate([0,0,180])
